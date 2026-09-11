@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(Desafio1 main.cpp
     tablero.h tablero.cpp
     memoriatablero.h memoriatablero.cpp
-    SweetCrush.md
+    README.md
     .gitignore)
 
 include(GNUInstallDirs)
