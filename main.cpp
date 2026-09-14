@@ -4,50 +4,44 @@
 
 using namespace std;
 
-unsigned char fichas[20] = {
-    1, 2, 3, 4, 5,
-    5, 4, 3, 2, 1,
-    0, 1, 0, 4, 5,
-    2, 3, 4, 5, 2
-};
-
 
 int main(){
-    int filas = 5, columnas = 4;
+    srand(time(0));
+    int filas = 7, columnas = 5;
     int bytesTablero = calcularBytesTablero(filas, columnas);
-    unsigned char* tablero = crearTablero(filas, columnas, bytesTablero);
+    unsigned char* tablero = crearTablero(bytesTablero);
     inicializarBuffer(tablero, bytesTablero);
+    llenarTablero(tablero, filas,columnas);
 
     for(int fila = 0; fila < filas; fila++){
-        cout << "fila " << fila << ": ";
+        std::cout << "fila " << fila << ": ";
         for(int columna = 0; columna < columnas; columna++){
             int posicion = calcularPosicion(fila,columna,columnas);
-            unsigned char ficha = fichas[posicion];
-            guardarFicha(tablero, posicion, ficha);
+            unsigned char ficha = tablero[posicion];
             unsigned char obtFicha = obtenerFicha(tablero, posicion);
             unsigned char letra = asignarLetra(obtFicha);
-            cout << letra << " ";
+            std::cout << letra << " ";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
 
-    cout << "Bytes del tablero: " << bytesTablero << endl;
+    std::cout << "Bytes del tablero: " << bytesTablero << std::endl;
 
-    cout << endl;
+    std::cout << std::endl;
 
     imprimirBits(tablero,bytesTablero);
 
-    cout << endl;
+    std::cout << std::endl;
 
-    // for(int i = 0; i <= bytesTablero; i++){
-    //     unsigned char ficha = obtenerFicha(tablero, i);
-    //     cout << "Ficha: " << i << " = " << (int)ficha << " (";
-    //     for(int j = 2; j >= 0; j--){
-    //         cout << ((ficha >> j) & 1);
-    //     }
+    for(int i = 0; i <= bytesTablero; i++){
+        unsigned char ficha = obtenerFicha(tablero, i);
+        cout << "Ficha: " << i << " = " << (int)ficha << " (";
+        for(int j = 2; j >= 0; j--){
+            cout << ((ficha >> j) & 1);
+        }
 
-    //     cout << ")" << endl;
-    // }
+        cout << ")" << endl;
+    }
 
     return 0;
 }

@@ -1,7 +1,11 @@
 #include "memoriatablero.h"
+#include "tablero.h"
 #include <iostream>
 
 
+unsigned char generarFicha(){
+    return rand() % 6;
+}
 
 unsigned char obtenerFicha(unsigned char* memoria, int numFicha){
     int bitInicial = numFicha * 3;

@@ -1,5 +1,10 @@
 #include "tablero.h"
+#include "memoriatablero.h"
+#include <iostream>
 
+
+/*Funcion que se encarga de llenar el buffer del tablero con ceros,
+ de esta manera sera mas fácil manipular los bits*/
 void inicializarBuffer(unsigned char* buffer, int& bytesTablero){
     int numBytes = (bytesTablero * 3 + 7) / 8;
     for (int i = 0; i < numBytes; i++){
@@ -7,17 +12,20 @@ void inicializarBuffer(unsigned char* buffer, int& bytesTablero){
     }
 }
 
+//Operacion que usamos para saber cuantos bytes va a requerir el tablero
 int calcularBytesTablero(int filas, int columnas) {
     return (filas * columnas * 3 + 7) / 8;
 }
 
-unsigned char* crearTablero(int filas, int columnas, int bytes){
+/*Funcion que se encarga de dimensionar el arreglo en base a los bytes
+ calculados*/
+unsigned char* crearTablero(int bytes){
     unsigned char* tablero = new unsigned char[bytes];
 
     return tablero;
 }
 
-unsigned char asignarLetra(int ficha){
+unsigned char asignarLetra(unsigned char ficha){
     if( ficha == 0) return 'A';
     else if(ficha == 1) return 'B';
     else if(ficha == 2) return 'C';
@@ -59,4 +67,17 @@ void guardarFicha(unsigned char* memoria, int posicion, unsigned char fichas){
 
 int calcularPosicion(int fila, int columna, int columnas){
     return fila*columnas + columna;
+}
+
+
+/*La responsabilidad de esta función es llenar el tablero con las fichas aleatorias, esto lo realiza mediante
+ la funcion generarFicha, la cual genera fichas aleatorias mientras itera sobre la posición donde sera almacenada en el tablero*/
+void llenarTablero(unsigned char *tablero, int filas, int columnas){
+    for(int fila = 0; fila < filas; fila++){
+        for(int columna = 0; columna < columnas; columna++){
+            unsigned char ficha = generarFicha();
+            int posicion = calcularPosicion(fila,columna,columnas);
+            guardarFicha(tablero,posicion,ficha);
+        }
+    }
 }
