@@ -31,6 +31,7 @@ int main(){
     cout << endl;
 
     cout << combHorizontales(tableroP, 0, 1, columnas) << endl;
+    cout << combVerticales(tableroP,0,1,filas,columnas);
 
 
     // while(true){

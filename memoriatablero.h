@@ -9,6 +9,7 @@ int calcularPosicion(int fila, int columna, int columnas);
 unsigned char obtenerFicha(unsigned char* memoria, int posicion);
 void imprimirBits(const unsigned char *byte, int numBytes);
 int combHorizontales(unsigned char* tablero, int fila, int columna, int columnas);
+int combVerticales(unsigned char* tablero, int fila, int columna, int filas, int columnas);
 
 
 #endif // MEMORIATABLERO_H

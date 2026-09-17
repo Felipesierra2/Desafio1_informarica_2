@@ -38,16 +38,21 @@ int combHorizontales(unsigned char* tablero, int fila, int columna, int columnas
     int numFicha = calcularPosicion(fila,columna,columnas);
     unsigned char fichaBase = obtenerFicha(tablero, numFicha);
 
-    if (columna > 0) {
-        int posicion = calcularPosicion(fila,columna - 1,columnas);
+    int contador = 1;
+    int c = columna - 1;
+
+    while (c >= 0) {
+        int posicion = calcularPosicion(fila,c,columnas);
         unsigned char izquierda = obtenerFicha(tablero,posicion);
         if (izquierda == fichaBase) {
-            return 0;
+            contador++;
+            c--;
+        }else{
+            break;
         }
     }
 
-    int contador = 1;
-    int c = columna + 1;
+    c = columna + 1;
 
     while (c < columnas) {
         int posicion = calcularPosicion(fila,c,columnas);
@@ -63,5 +68,42 @@ int combHorizontales(unsigned char* tablero, int fila, int columna, int columnas
     if (contador >= 3) {
         return contador;
     }
+    return 0;
+}
+
+int combVerticales(unsigned char* tablero, int fila, int columna, int filas, int columnas){
+    if(tablero == 0) return 0;
+    if(fila < 0 || columna < 0 || columnas < 0) return -1;
+    if(fila >= filas || columna >= columnas) return -1;
+
+    int posicion = calcularPosicion(fila,columna,columnas);
+    int ficha = obtenerFicha(tablero,posicion);
+
+    int cont = 1;
+    int f = fila - 1;
+    while(f >= 0){
+        int posicion = calcularPosicion(f,columna,columnas);
+        unsigned char arriba = obtenerFicha(tablero,posicion);
+        if(arriba == ficha){
+            cont++;
+            f--;
+        }else{
+            break;
+        }
+    }
+
+    f = fila + 1;
+    while(f < filas){
+        int posicion = calcularPosicion(f,columna,columnas);
+        unsigned char ficha2 = obtenerFicha(tablero,posicion);
+        if(ficha == ficha2){
+            cont++;
+            f++;
+        }else{
+            break;
+        }
+    }
+
+    if(cont >= 3) return cont;
     return 0;
 }
