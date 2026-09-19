@@ -33,77 +33,118 @@ void llenarTablero(unsigned char *tablero, int filas, int columnas){
 int combHorizontales(unsigned char* tablero, int fila, int columna, int columnas){
     if (tablero == 0) return -1;
     if (fila < 0 || columna < 0 || columnas <= 0) return -1;
-    if (columna + 2 >= columnas) return 0;
+    if (columna >= columnas) return -1;
 
-    int numFicha = calcularPosicion(fila,columna,columnas);
-    unsigned char fichaBase = obtenerFicha(tablero, numFicha);
+    int posicion = calcularPosicion(fila, columna, columnas);
+    unsigned char fichaBase = obtenerFicha(tablero, posicion);
 
     int contador = 1;
-    int c = columna - 1;
-
-    while (c >= 0) {
-        int posicion = calcularPosicion(fila,c,columnas);
-        unsigned char izquierda = obtenerFicha(tablero,posicion);
-        if (izquierda == fichaBase) {
-            contador++;
-            c--;
-        }else{
-            break;
-        }
-    }
-
-    c = columna + 1;
+    int c = columna + 1;
 
     while (c < columnas) {
-        int posicion = calcularPosicion(fila,c,columnas);
-        unsigned char siguiente = obtenerFicha(tablero,posicion);
-        if (siguiente == fichaBase) {
-            contador++;
-            c++;
-        } else {
+        posicion = calcularPosicion(fila, c, columnas);
+        unsigned char ficha = obtenerFicha(tablero, posicion);
+
+        if (ficha != fichaBase) {
             break;
         }
+
+        contador++;
+        c++;
     }
 
-    if (contador >= 3) {
-        return contador;
-    }
-    return 0;
+    return contador;
 }
 
 int combVerticales(unsigned char* tablero, int fila, int columna, int filas, int columnas){
-    if(tablero == 0) return 0;
-    if(fila < 0 || columna < 0 || columnas < 0) return -1;
-    if(fila >= filas || columna >= columnas) return -1;
+    if (tablero == 0) return -1;
+    if (fila < 0 || columna < 0 || filas <= 0 || columnas <= 0) return -1;
+    if (fila >= filas || columna >= columnas) return -1;
 
-    int posicion = calcularPosicion(fila,columna,columnas);
-    int ficha = obtenerFicha(tablero,posicion);
+    int posicion = calcularPosicion(fila, columna, columnas);
+    unsigned char fichaBase = obtenerFicha(tablero, posicion);
 
-    int cont = 1;
-    int f = fila - 1;
-    while(f >= 0){
-        int posicion = calcularPosicion(f,columna,columnas);
-        unsigned char arriba = obtenerFicha(tablero,posicion);
-        if(arriba == ficha){
-            cont++;
-            f--;
-        }else{
+    int contador = 1;
+    int f = fila + 1;
+
+    while (f < filas) {
+        posicion = calcularPosicion(f, columna, columnas);
+        unsigned char ficha = obtenerFicha(tablero, posicion);
+
+        if (ficha != fichaBase) {
             break;
+        }
+
+        contador++;
+        f++;
+    }
+
+    return contador;
+}
+
+bool estaEliminada(int* eliminadas, int cantidadEliminadas, int posicion){
+    for(int i = 0; i < cantidadEliminadas; i++){
+        if(eliminadas[i] == posicion){
+            return true;
         }
     }
 
-    f = fila + 1;
-    while(f < filas){
-        int posicion = calcularPosicion(f,columna,columnas);
-        unsigned char ficha2 = obtenerFicha(tablero,posicion);
-        if(ficha == ficha2){
-            cont++;
-            f++;
-        }else{
-            break;
+    return false;
+}
+
+int buscarCombinaciones(unsigned char* tablero, int* eliminadas,int filas, int columnas){
+    if(tablero == 0 || eliminadas == 0) return -1;
+    if(filas <= 0 || columnas <= 0) return -1;
+
+    int cantidadEliminadas = 0;
+
+    for(int fila = 0; fila < filas; fila++){
+
+        for(int columna = 0; columna < columnas; columna++){
+
+            // Buscamos combinaciones horizontales
+            int cantidadHorizontal = combHorizontales(tablero, fila, columna, columnas);
+
+            if(cantidadHorizontal >= 3){
+
+                for(int i = 0; i < cantidadHorizontal; i++){
+
+                    int posicion = calcularPosicion(fila, columna + i, columnas);
+
+                    if(!estaEliminada(eliminadas,cantidadEliminadas,posicion)){
+                        eliminadas[cantidadEliminadas] = posicion;
+                        cantidadEliminadas++;
+                    }
+                }
+            }
+
+            // Buscamos combinaciones verticales
+            int cantidadVertical = combVerticales(tablero, fila, columna, filas, columnas);
+
+            if(cantidadVertical >= 3){
+
+                for(int i = 0; i < cantidadVertical; i++){
+
+                    int posicion = calcularPosicion(fila + i, columna, columnas);
+
+                    if(!estaEliminada(eliminadas,cantidadEliminadas,posicion)){
+                        eliminadas[cantidadEliminadas] = posicion;
+                        cantidadEliminadas++;
+                    }
+                }
+            }
         }
     }
 
-    if(cont >= 3) return cont;
-    return 0;
+    for(int i = 0; i < cantidadEliminadas; i++){
+
+        int posicion = eliminadas[i];
+
+        std::cout << "Posicion " << posicion
+             << " -> ficha "
+             << (int)obtenerFicha(tablero, posicion)
+             << std::endl;
+    }
+
+    return cantidadEliminadas;
 }
