@@ -11,6 +11,12 @@ int buscarCombinaciones(unsigned char* tablero, int *eliminadas, int filas, int 
 void eliminarFichas(unsigned char* tablero, int* eliminadas,int cantidadEliminadas);
 void hacerCaerTablero(unsigned char* tablero, int filas, int columnas);
 void rellenarTablero(unsigned char* tablero, int filas, int columnas);
+void mostrarTablero(unsigned char* tablero, int filas, int columnas);
+int filaSeleccion(int filas);
+int pedirPosicion(int filas, int columnas);
+int pedirFilas();
+int pedirColumnas();
+int pedirAccion();
 
 
 #endif // TABLERO_H

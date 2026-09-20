@@ -9,6 +9,8 @@ int calcularPosicion(int fila, int columna, int columnas);
 unsigned char obtenerFicha(unsigned char* memoria, int posicion);
 void imprimirBits(const unsigned char *byte, int numBytes);
 void hacerCaerColumna(unsigned char* tablero, int columna,int filas, int columnas);
-
+void procesarEliminacionFicha(unsigned char* tablero, int filas, int columnas);
+void agregarFila(unsigned char*& tablero,int& filas,int columnas,int fila);
+void eliminarFila(unsigned char*& tablero,int& filas,int columnas,int fila);
 
 #endif // MEMORIATABLERO_H

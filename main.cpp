@@ -6,32 +6,47 @@ using namespace std;
 
 int main(){
     srand(time(0));
-    int filas = 6, columnas = 4;
+    int filas = pedirFilas(), columnas = pedirColumnas();
     int* eliminadas = new int[filas*columnas];
+
+    if(filas == -1 || columnas == -1){
+        cout << "Dimensiones invalidas." << endl;
+        return 0;
+    }
+
     int bytesTablero = calcularBytesTablero(filas, columnas);
     unsigned char* tablero = crearTablero(bytesTablero);
+
     inicializarBuffer(tablero, bytesTablero);
     llenarTablero(tablero, filas,columnas);
 
     int cantidadEliminadas;
+    int opcion = pedirAccion();
 
-    while(true){
+    while(opcion != 6){
+        std::cout << std::endl;
+        mostrarTablero(tablero,filas,columnas);
 
-        for(int fila = 0; fila < filas; fila++){
-            for(int columna = 0; columna < columnas; columna++){
-                int posicion = calcularPosicion(fila,columna,columnas);
-                unsigned char obtFicha = obtenerFicha(tablero, posicion);
-                unsigned char letra = asignarLetra(obtFicha);
-                std::cout << int(obtFicha) << " ";
-            }
-            std::cout << std::endl;
+        if(opcion == 1){
+            procesarEliminacionFicha(tablero,filas,columnas);
+        }else if(opcion == 2){
+            int fila = filaSeleccion(filas);
+            agregarFila(tablero,filas,columnas,fila);
+            mostrarTablero(tablero,filas,columnas);
+        }else if(opcion == 3){
+            int fila = filaSeleccion(filas);
+            eliminarFila(tablero,filas,columnas,fila);
+            mostrarTablero(tablero,filas,columnas);
+        }else if(opcion == 6)break;
+
+
+        opcion = pedirAccion();
+
+        if(opcion == 6){
+            break;
         }
 
         cantidadEliminadas = buscarCombinaciones(tablero, eliminadas, filas, columnas);
-
-        if(cantidadEliminadas <= 0){
-            break;
-        }
 
         eliminarFichas(tablero, eliminadas, cantidadEliminadas);
 

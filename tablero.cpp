@@ -2,6 +2,78 @@
 #include "memoriatablero.h"
 #include <iostream>
 
+int pedirFilas(){
+
+    int filas;
+
+    std::cout << "Ingrese la cantidad de filas: ";
+    std::cin >> filas;
+
+    if(filas <= 0){
+        return -1;
+    }
+
+    std::cout << std::endl;
+
+    return filas;
+}
+
+int pedirColumnas(){
+
+    int columnas;
+
+    std::cout << "Ingrese la cantidad de columnas: ";
+    std::cin >> columnas;
+
+    if(columnas <= 0){
+        return -1;
+    }
+
+    std::cout << std::endl;
+
+    return columnas;
+}
+
+int filaSeleccion(int filas){
+    std::cout << "Ingrese la fila: ";
+    int fila;
+    std::cin >> fila;
+    fila--;
+
+    if(fila < 0 || fila >= filas){
+        return -1;
+    }
+
+    return fila;
+}
+
+int columnaSeleccion(int columnas){
+    int columna;
+    std::cout << "Ingrese la columna: ";
+    std::cin >> columna;
+    columna--;
+
+    if(columna < 0 || columna >= columnas){
+        return -1;
+    }
+
+    return columna;
+}
+
+int pedirPosicion(int filas, int columnas){
+    int fila = filaSeleccion(filas);
+    int columna = columnaSeleccion(columnas);
+    while(true){
+        if(fila == -1){
+            std::cout << "Debe ingresar un numero mayor a 0" << std::endl;
+            int fila = filaSeleccion(filas);
+        }else if(columna == -1){
+            std::cout << "Debe ingresar un numero mayor a 0" << std::endl;
+            int columna = columnaSeleccion(columnas);
+        }else break;
+    }
+    return calcularPosicion(fila, columna, columnas);
+}
 
 
 /*La función retorna un numero entre 0 y 5*/
@@ -28,6 +100,19 @@ void llenarTablero(unsigned char *tablero, int filas, int columnas){
             guardarFicha(tablero,posicion,ficha);
         }
     }
+}
+
+void mostrarTablero(unsigned char* tablero, int filas, int columnas){
+    for(int fila = 0; fila < filas; fila++){
+        for(int columna = 0; columna < columnas; columna++){
+            int posicion = calcularPosicion(fila,columna,columnas);
+            unsigned char obtFicha = obtenerFicha(tablero, posicion);
+            unsigned char letra = asignarLetra(obtFicha);
+            std::cout << int(obtFicha) << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 }
 
 int combHorizontales(unsigned char* tablero, int fila, int columna, int columnas){
@@ -136,16 +221,6 @@ int buscarCombinaciones(unsigned char* tablero, int* eliminadas,int filas, int c
         }
     }
 
-    for(int i = 0; i < cantidadEliminadas; i++){
-
-        int posicion = eliminadas[i];
-
-        std::cout << "Posicion " << posicion
-             << " -> ficha "
-             << (int)obtenerFicha(tablero, posicion)
-             << std::endl;
-    }
-
     return cantidadEliminadas;
 }
 
@@ -187,3 +262,26 @@ void rellenarTablero(unsigned char* tablero, int filas, int columnas){
         }
     }
 }
+
+int pedirAccion(){
+    int opcion;
+    std::cout << "1. Eliminar ficha" << std::endl;
+    std::cout << "2. Agregar fila" << std::endl;
+    std::cout << "3. Eliminar fila" << std::endl;
+    std::cout << "4. Agregar fila" << std::endl;
+    std::cout << "5. Agregar columna" << std::endl;
+    std::cout << "6. Salir" << std::endl;
+
+    std::cout << "Seleccione una opcion: ";
+    std::cin >> opcion;
+
+    if(opcion <= 0){
+        return -1;
+    }
+
+    return opcion;
+}
+
+
+
+

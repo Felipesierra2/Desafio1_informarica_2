@@ -128,3 +128,120 @@ void hacerCaerColumna(unsigned char* tablero, int columna,int filas, int columna
         }
     }
 }
+
+void procesarEliminacionFicha(unsigned char* tablero, int filas, int columnas){
+    int posicion = pedirPosicion(filas, columnas);
+
+    if(posicion == -1){
+        std::cout << "Posicion invalida." << std::endl;
+        return;
+    }
+
+    guardarFicha(tablero, posicion, 6);
+
+    hacerCaerTablero(tablero, filas, columnas);
+
+    rellenarTablero(tablero, filas, columnas);
+
+    mostrarTablero(tablero,filas,columnas);
+}
+
+void agregarFila(unsigned char*& tablero,int& filas,int columnas,int fila){
+    if(tablero == 0) return;
+    if(filas <= 0 || columnas <= 0) return;
+    if(fila < 1 || fila > filas + 1) return;
+
+    int nuevasFilas = filas + 1;
+
+    int bytesViejos = calcularBytesTablero(filas, columnas);
+    int bytesNuevos = calcularBytesTablero(nuevasFilas, columnas);
+
+    unsigned char* nuevoTablero = crearTablero(bytesNuevos);
+
+    if(nuevoTablero == 0) return;
+
+    inicializarBuffer(nuevoTablero, bytesNuevos);
+
+    int nuevaPosicion = 0;
+
+    for(int f = 0; f < nuevasFilas; f++){
+
+        if(f == fila){
+            for(int c = 0; c < columnas; c++){
+                int posicion = calcularPosicion(f, c, columnas);
+
+                guardarFicha(nuevoTablero,posicion,generarFicha());
+            }
+        }
+        else{
+            int filaVieja = f;
+
+            if(f > fila){
+                filaVieja--;
+            }
+
+            for(int c = 0; c < columnas; c++){
+
+                int posicionVieja = calcularPosicion(filaVieja, c, columnas);
+
+                unsigned char ficha = obtenerFicha(tablero, posicionVieja);
+
+                int posicionNueva = calcularPosicion(f, c, columnas);
+
+                guardarFicha(nuevoTablero,posicionNueva,ficha);
+            }
+        }
+    }
+
+    delete[] tablero;
+
+    tablero = nuevoTablero;
+    filas = nuevasFilas;
+
+    delete[]nuevoTablero;
+    nuevoTablero = nullptr;
+}
+
+void eliminarFila(unsigned char*& tablero,int& filas,int columnas,int fila){
+    if(tablero == 0) return;
+    if(filas <= 1 || columnas <= 0) return;
+    if(fila < 1 || fila > filas) return;
+
+    int nuevasFilas = filas - 1;
+
+    int bytesNuevos = calcularBytesTablero(nuevasFilas, columnas);
+
+    unsigned char* nuevoTablero = crearTablero(bytesNuevos);
+
+    if(nuevoTablero == 0) return;
+
+    inicializarBuffer(nuevoTablero, bytesNuevos);
+
+    for(int f = 0; f < nuevasFilas; f++){
+
+        int filaVieja = f;
+
+        if(f >= fila){
+            filaVieja++;
+        }
+
+        for(int c = 0; c < columnas; c++){
+
+            int posicionVieja = calcularPosicion(filaVieja, c, columnas);
+
+            unsigned char ficha = obtenerFicha(tablero, posicionVieja);
+
+            int posicionNueva = calcularPosicion(f, c, columnas);
+
+            guardarFicha(nuevoTablero,posicionNueva,ficha);
+        }
+    }
+
+    delete[] tablero;
+
+    tablero = nuevoTablero;
+    filas = nuevasFilas;
+
+    delete[]nuevoTablero;
+    nuevoTablero = nullptr;
+}
