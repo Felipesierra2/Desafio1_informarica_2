@@ -94,3 +94,37 @@ void imprimirBits(const unsigned char* byte, int numBytes){
     }
     std::cout << std::endl;
 }
+
+void hacerCaerColumna(unsigned char* tablero, int columna,int filas, int columnas){
+    if(tablero == 0) return;
+    if(columna < 0 || columna >= columnas) return;
+    if(filas <= 0 || columnas <= 0) return;
+
+    for(int fila = filas - 1; fila >= 0; fila--){
+
+        int posicion = calcularPosicion(fila, columna, columnas);
+        unsigned char ficha = obtenerFicha(tablero, posicion);
+
+        if(ficha == 6){
+
+            int filaSuperior = fila - 1;
+
+            while(filaSuperior >= 0){
+
+                int posicionSuperior = calcularPosicion(filaSuperior, columna, columnas);
+
+                unsigned char fichaSuperior = obtenerFicha(tablero, posicionSuperior);
+
+                if(fichaSuperior != 6){
+
+                    guardarFicha(tablero, posicion, fichaSuperior);
+                    guardarFicha(tablero, posicionSuperior, 6);
+
+                    break;
+                }
+
+                filaSuperior--;
+            }
+        }
+    }
+}

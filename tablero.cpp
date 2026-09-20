@@ -148,3 +148,42 @@ int buscarCombinaciones(unsigned char* tablero, int* eliminadas,int filas, int c
 
     return cantidadEliminadas;
 }
+
+void eliminarFichas(unsigned char* tablero, int* eliminadas,int cantidadEliminadas){
+    for(int i = 0; i < cantidadEliminadas; i++){
+
+        guardarFicha(tablero, eliminadas[i], 6);
+    }
+}
+
+void hacerCaerTablero(unsigned char* tablero, int filas, int columnas){
+
+    if(tablero == 0) return;
+    if(filas <= 0 || columnas <= 0) return;
+
+    for(int columna = 0; columna < columnas; columna++){
+
+        hacerCaerColumna(tablero, columna, filas, columnas);
+    }
+}
+
+void rellenarTablero(unsigned char* tablero, int filas, int columnas){
+    if(tablero == 0) return;
+    if(filas <= 0 || columnas <= 0) return;
+
+    for(int fila = 0; fila < filas; fila++){
+
+        for(int columna = 0; columna < columnas; columna++){
+
+            int posicion = calcularPosicion(fila, columna, columnas);
+            unsigned char ficha = obtenerFicha(tablero, posicion);
+
+            if(ficha == 6){
+
+                unsigned char nuevaFicha = generarFicha();
+
+                guardarFicha(tablero, posicion, nuevaFicha);
+            }
+        }
+    }
+}
