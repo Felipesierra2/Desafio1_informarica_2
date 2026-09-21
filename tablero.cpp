@@ -268,8 +268,8 @@ int pedirAccion(){
     std::cout << "1. Eliminar ficha" << std::endl;
     std::cout << "2. Agregar fila" << std::endl;
     std::cout << "3. Eliminar fila" << std::endl;
-    std::cout << "4. Agregar fila" << std::endl;
-    std::cout << "5. Agregar columna" << std::endl;
+    std::cout << "4. Agregar columna" << std::endl;
+    std::cout << "5. Eliminar columna" << std::endl;
     std::cout << "6. Salir" << std::endl;
 
     std::cout << "Seleccione una opcion: ";

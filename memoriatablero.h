@@ -11,6 +11,8 @@ void imprimirBits(const unsigned char *byte, int numBytes);
 void hacerCaerColumna(unsigned char* tablero, int columna,int filas, int columnas);
 void procesarEliminacionFicha(unsigned char* tablero, int filas, int columnas);
 void agregarFila(unsigned char*& tablero,int& filas,int columnas,int fila);
+void agregarColumna(unsigned char*& tablero,int filas,int& columnas,int columna);
 void eliminarFila(unsigned char*& tablero,int& filas,int columnas,int fila);
+void eliminarColumna(unsigned char*& tablero,int filas,int& columnas,int columna);
 
 #endif // MEMORIATABLERO_H

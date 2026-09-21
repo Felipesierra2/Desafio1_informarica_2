@@ -7,7 +7,6 @@ using namespace std;
 int main(){
     srand(time(0));
     int filas = pedirFilas(), columnas = pedirColumnas();
-    int* eliminadas = new int[filas*columnas];
 
     if(filas == -1 || columnas == -1){
         cout << "Dimensiones invalidas." << endl;
@@ -15,44 +14,55 @@ int main(){
     }
 
     int bytesTablero = calcularBytesTablero(filas, columnas);
+    int* eliminadas = new int[filas*columnas];
     unsigned char* tablero = crearTablero(bytesTablero);
 
     inicializarBuffer(tablero, bytesTablero);
     llenarTablero(tablero, filas,columnas);
+    mostrarTablero(tablero,filas,columnas);
 
     int cantidadEliminadas;
     int opcion = pedirAccion();
 
     while(opcion != 6){
         std::cout << std::endl;
-        mostrarTablero(tablero,filas,columnas);
 
         if(opcion == 1){
-            procesarEliminacionFicha(tablero,filas,columnas);
+            procesarEliminacionFicha(tablero, filas, columnas);
+
+            cantidadEliminadas = buscarCombinaciones(tablero, eliminadas, filas, columnas);
+
+            eliminarFichas(tablero, eliminadas, cantidadEliminadas);
+
+            hacerCaerTablero(tablero, filas, columnas);
+
+            rellenarTablero(tablero, filas, columnas);
         }else if(opcion == 2){
             int fila = filaSeleccion(filas);
+
             agregarFila(tablero,filas,columnas,fila);
-            mostrarTablero(tablero,filas,columnas);
         }else if(opcion == 3){
             int fila = filaSeleccion(filas);
+
             eliminarFila(tablero,filas,columnas,fila);
-            mostrarTablero(tablero,filas,columnas);
+
+        }else if(opcion == 4){
+            int columna = columnaSeleccion(columnas);
+
+            agregarColumna(tablero,filas,columnas,columna);
+        }else if(opcion == 5){
+            int columna = columnaSeleccion(columnas);
+
+            eliminarColumna(tablero,filas,columnas,columna);
         }else if(opcion == 6)break;
 
-
+        mostrarTablero(tablero,filas,columnas);
         opcion = pedirAccion();
 
         if(opcion == 6){
             break;
         }
 
-        cantidadEliminadas = buscarCombinaciones(tablero, eliminadas, filas, columnas);
-
-        eliminarFichas(tablero, eliminadas, cantidadEliminadas);
-
-        hacerCaerTablero(tablero, filas, columnas);
-
-        rellenarTablero(tablero, filas, columnas);
     }
 
     std::cout << std::endl;

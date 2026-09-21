@@ -142,8 +142,6 @@ void procesarEliminacionFicha(unsigned char* tablero, int filas, int columnas){
     hacerCaerTablero(tablero, filas, columnas);
 
     rellenarTablero(tablero, filas, columnas);
-
-    mostrarTablero(tablero,filas,columnas);
 }
 
 void agregarFila(unsigned char*& tablero,int& filas,int columnas,int fila){
@@ -198,8 +196,63 @@ void agregarFila(unsigned char*& tablero,int& filas,int columnas,int fila){
     tablero = nuevoTablero;
     filas = nuevasFilas;
 
-    delete[]nuevoTablero;
-    nuevoTablero = nullptr;
+    std::cout << "Fila recibida: " << fila << std::endl;
+    std::cout << "Nuevas filas: " << filas << std::endl;
+}
+
+void agregarColumna(unsigned char*& tablero,int filas,int& columnas,int columna){
+
+    if(tablero == 0) return;
+    if(filas <= 0 || columnas <= 0) return;
+    if(columna < 0 || columna >= columnas) return;
+
+    int nuevasColumnas = columnas + 1;
+
+    int bytesNuevos = calcularBytesTablero(filas, nuevasColumnas);
+
+    unsigned char* nuevoTablero = crearTablero(bytesNuevos);
+
+    if(nuevoTablero == 0) return;
+
+    inicializarBuffer(nuevoTablero, bytesNuevos);
+
+    for(int f = 0; f < filas; f++){
+
+        for(int c = 0; c < nuevasColumnas; c++){
+
+            if(c == columna + 1){
+
+                int posicionNueva =
+                    calcularPosicion(f, c, nuevasColumnas);
+
+                guardarFicha(nuevoTablero,posicionNueva,generarFicha());
+            }
+            else{
+
+                int columnaVieja;
+
+                if(c <= columna){
+                    columnaVieja = c;
+                }
+                else{
+                    columnaVieja = c - 1;
+                }
+
+                int posicionVieja = calcularPosicion(f, columnaVieja, columnas);
+
+                unsigned char ficha = obtenerFicha(tablero, posicionVieja);
+
+                int posicionNueva = calcularPosicion(f, c, nuevasColumnas);
+
+                guardarFicha(nuevoTablero,posicionNueva,ficha);
+            }
+        }
+    }
+
+    delete[] tablero;
+
+    tablero = nuevoTablero;
+    columnas = nuevasColumnas;
 }
 
 void eliminarFila(unsigned char*& tablero,int& filas,int columnas,int fila){
@@ -210,7 +263,6 @@ void eliminarFila(unsigned char*& tablero,int& filas,int columnas,int fila){
     int nuevasFilas = filas - 1;
 
     int bytesNuevos = calcularBytesTablero(nuevasFilas, columnas);
-
     unsigned char* nuevoTablero = crearTablero(bytesNuevos);
 
     if(nuevoTablero == 0) return;
@@ -219,10 +271,13 @@ void eliminarFila(unsigned char*& tablero,int& filas,int columnas,int fila){
 
     for(int f = 0; f < nuevasFilas; f++){
 
-        int filaVieja = f;
+        int filaVieja;
 
-        if(f >= fila){
-            filaVieja++;
+        if(f < fila){
+            filaVieja = f;
+        }
+        else{
+            filaVieja = f + 1;
         }
 
         for(int c = 0; c < columnas; c++){
@@ -241,7 +296,50 @@ void eliminarFila(unsigned char*& tablero,int& filas,int columnas,int fila){
 
     tablero = nuevoTablero;
     filas = nuevasFilas;
+}
 
-    delete[]nuevoTablero;
-    nuevoTablero = nullptr;
+void eliminarColumna(unsigned char*& tablero,int filas,int& columnas,int columna){
+    if(tablero == 0) return;
+    if(filas <= 0 || columnas <= 1) return;
+    if(columna < 0 || columna >= columnas) return;
+
+    int nuevasColumnas = columnas - 1;
+
+    int bytesNuevos =
+        calcularBytesTablero(filas, nuevasColumnas);
+
+    unsigned char* nuevoTablero =
+        crearTablero(bytesNuevos);
+
+    if(nuevoTablero == 0) return;
+
+    inicializarBuffer(nuevoTablero, bytesNuevos);
+
+    for(int f = 0; f < filas; f++){
+
+        for(int c = 0; c < nuevasColumnas; c++){
+
+            int columnaVieja;
+
+            if(c < columna){
+                columnaVieja = c;
+            }
+            else{
+                columnaVieja = c + 1;
+            }
+
+            int posicionVieja = calcularPosicion(f, columnaVieja, columnas);
+
+            unsigned char ficha = obtenerFicha(tablero, posicionVieja);
+
+            int posicionNueva = calcularPosicion(f, c, nuevasColumnas);
+
+            guardarFicha(nuevoTablero,posicionNueva,ficha);
+        }
+    }
+
+    delete[] tablero;
+
+    tablero = nuevoTablero;
+    columnas = nuevasColumnas;
 }

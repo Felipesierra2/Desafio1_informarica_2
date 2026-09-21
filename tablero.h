@@ -13,6 +13,7 @@ void hacerCaerTablero(unsigned char* tablero, int filas, int columnas);
 void rellenarTablero(unsigned char* tablero, int filas, int columnas);
 void mostrarTablero(unsigned char* tablero, int filas, int columnas);
 int filaSeleccion(int filas);
+int columnaSeleccion(int columnas);
 int pedirPosicion(int filas, int columnas);
 int pedirFilas();
 int pedirColumnas();
