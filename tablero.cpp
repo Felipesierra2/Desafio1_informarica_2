@@ -108,7 +108,7 @@ void mostrarTablero(unsigned char* tablero, int filas, int columnas){
             int posicion = calcularPosicion(fila,columna,columnas);
             unsigned char obtFicha = obtenerFicha(tablero, posicion);
             unsigned char letra = asignarLetra(obtFicha);
-            std::cout << int(obtFicha) << " ";
+            std::cout << letra << " ";
         }
         std::cout << std::endl;
     }
@@ -177,49 +177,86 @@ bool estaEliminada(int* eliminadas, int cantidadEliminadas, int posicion){
     return false;
 }
 
-int buscarCombinaciones(unsigned char* tablero, int* eliminadas,int filas, int columnas){
+int buscarCombinaciones(unsigned char* tablero,int* eliminadas,int filas,int columnas,int& combinacionDetectadas){
     if(tablero == 0 || eliminadas == 0) return -1;
     if(filas <= 0 || columnas <= 0) return -1;
 
+    int cantidadCombinaciones = 0;
     int cantidadEliminadas = 0;
 
     for(int fila = 0; fila < filas; fila++){
-
         for(int columna = 0; columna < columnas; columna++){
 
-            // Buscamos combinaciones horizontales
+            int posicion = calcularPosicion(fila, columna, columnas);
+            unsigned char ficha = obtenerFicha(tablero, posicion);
+
             int cantidadHorizontal = combHorizontales(tablero, fila, columna, columnas);
 
-            if(cantidadHorizontal >= 3){
+            bool inicioHorizontal = true;
+
+            if(columna > 0){
+
+                int posicionAnterior = calcularPosicion(fila, columna - 1, columnas);
+
+                unsigned char fichaAnterior = obtenerFicha(tablero, posicionAnterior);
+
+                if(fichaAnterior == ficha){
+                    inicioHorizontal = false;
+                }
+            }
+
+            if(cantidadHorizontal >= 3 && inicioHorizontal){
+
+                cantidadCombinaciones++;
 
                 for(int i = 0; i < cantidadHorizontal; i++){
 
-                    int posicion = calcularPosicion(fila, columna + i, columnas);
+                    int posicionEliminar = calcularPosicion(fila, columna + i, columnas);
 
-                    if(!estaEliminada(eliminadas,cantidadEliminadas,posicion)){
-                        eliminadas[cantidadEliminadas] = posicion;
+                    if(!estaEliminada(eliminadas,cantidadEliminadas,posicionEliminar)){
+                        eliminadas[cantidadEliminadas] = posicionEliminar;
+
                         cantidadEliminadas++;
                     }
                 }
             }
 
-            // Buscamos combinaciones verticales
             int cantidadVertical = combVerticales(tablero, fila, columna, filas, columnas);
 
-            if(cantidadVertical >= 3){
+            bool inicioVertical = true;
+
+            if(fila > 0){
+
+                int posicionAnterior = calcularPosicion(fila - 1, columna, columnas);
+
+                unsigned char fichaAnterior = obtenerFicha(tablero, posicionAnterior);
+
+                if(fichaAnterior == ficha){
+                    inicioVertical = false;
+                }
+            }
+
+            if(cantidadVertical >= 3 && inicioVertical){
+
+                cantidadCombinaciones++;
 
                 for(int i = 0; i < cantidadVertical; i++){
 
-                    int posicion = calcularPosicion(fila + i, columna, columnas);
+                    int posicionEliminar = calcularPosicion(fila + i, columna, columnas);
 
-                    if(!estaEliminada(eliminadas,cantidadEliminadas,posicion)){
-                        eliminadas[cantidadEliminadas] = posicion;
+                    if(!estaEliminada(eliminadas, cantidadEliminadas, posicionEliminar)){
+
+                        eliminadas[cantidadEliminadas] =
+                            posicionEliminar;
+
                         cantidadEliminadas++;
                     }
                 }
             }
         }
     }
+
+    combinacionDetectadas += cantidadCombinaciones;
 
     return cantidadEliminadas;
 }
@@ -270,7 +307,8 @@ int pedirAccion(){
     std::cout << "3. Eliminar fila" << std::endl;
     std::cout << "4. Agregar columna" << std::endl;
     std::cout << "5. Eliminar columna" << std::endl;
-    std::cout << "6. Salir" << std::endl;
+    std::cout << "6. Mostrar los bits del tablero" << std::endl;
+    std::cout << "7. Salir" << std::endl;
 
     std::cout << "Seleccione una opcion: ";
     std::cin >> opcion;

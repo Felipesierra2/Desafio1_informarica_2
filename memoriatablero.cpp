@@ -343,3 +343,52 @@ void eliminarColumna(unsigned char*& tablero,int filas,int& columnas,int columna
     tablero = nuevoTablero;
     columnas = nuevasColumnas;
 }
+
+void procesarCascadas(unsigned char* tablero,int* eliminadas,int filas,int columnas,int& fichasEliminadas,
+                      int& combinacionesDetectadas,
+                      int& cascadasActuales,
+                      int& puntuacion){
+    int cantidadEliminadas;
+
+    cascadasActuales = 0;
+
+    bool primeraEliminacion = true;
+
+    while(true){
+
+        cantidadEliminadas =buscarCombinaciones(tablero,eliminadas,filas,columnas,combinacionesDetectadas);
+
+        if(cantidadEliminadas <= 0){
+            break;
+        }
+
+        if(!primeraEliminacion){
+            cascadasActuales++;
+        }
+
+        primeraEliminacion = false;
+
+        fichasEliminadas += cantidadEliminadas;
+        puntuacion += cantidadEliminadas * 10;
+
+        eliminarFichas(tablero,eliminadas,cantidadEliminadas);
+
+        hacerCaerTablero(tablero,filas,columnas);
+
+        rellenarTablero(tablero,filas,columnas);
+    }
+}
+
+void redimensionarEliminadas(int*& eliminadas, int filas, int columnas){
+    if(filas <= 0 || columnas <= 0) return;
+
+    int nuevaCantidad = filas * columnas;
+
+    int* nuevasEliminadas = new int[nuevaCantidad];
+
+    if(nuevasEliminadas == 0) return;
+
+    delete[] eliminadas;
+
+    eliminadas = nuevasEliminadas;
+}

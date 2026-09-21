@@ -6,6 +6,11 @@ using namespace std;
 
 int main(){
     srand(time(0));
+    int eliminacionesUsuario = 0;
+    int fichasEliminadas = 0;
+    int combinacionesDetectadas = 0;
+    int cascadasActuales = 0;
+    int puntuacion = 0;
     int filas = pedirFilas(), columnas = pedirColumnas();
 
     if(filas == -1 || columnas == -1){
@@ -24,37 +29,160 @@ int main(){
     int cantidadEliminadas;
     int opcion = pedirAccion();
 
-    while(opcion != 6){
+    while(opcion != 7){
         std::cout << std::endl;
-
         if(opcion == 1){
+            eliminacionesUsuario++;
+
             procesarEliminacionFicha(tablero, filas, columnas);
 
-            cantidadEliminadas = buscarCombinaciones(tablero, eliminadas, filas, columnas);
+            redimensionarEliminadas(eliminadas, filas, columnas);
 
-            eliminarFichas(tablero, eliminadas, cantidadEliminadas);
+            procesarCascadas(tablero,eliminadas,filas,columnas,fichasEliminadas,combinacionesDetectadas,
+                             cascadasActuales,puntuacion);
 
-            hacerCaerTablero(tablero, filas, columnas);
+            cout << "Eliminaciones realizadas: "
+                 << eliminacionesUsuario << endl;
 
-            rellenarTablero(tablero, filas, columnas);
+            cout << "Fichas eliminadas en total: "
+                 << fichasEliminadas << endl;
+
+            cout << "Combinaciones detectadas: "
+                 << combinacionesDetectadas << endl;
+
+            cout << "Cascadas de esta eliminacion: "
+                 << cascadasActuales << endl;
+
+            cout << "Puntuacion: "
+                 << puntuacion << endl;
+
         }else if(opcion == 2){
             int fila = filaSeleccion(filas);
 
             agregarFila(tablero,filas,columnas,fila);
+
+            redimensionarEliminadas(eliminadas, filas, columnas);
+
+            procesarCascadas(tablero,
+                             eliminadas,
+                             filas,
+                             columnas,
+                             fichasEliminadas,
+                             combinacionesDetectadas,
+                             cascadasActuales,
+                             puntuacion);
+
+            cout << "Eliminaciones realizadas: "
+                 << eliminacionesUsuario << endl;
+
+            cout << "Fichas eliminadas en total: "
+                 << fichasEliminadas << endl;
+
+            cout << "Combinaciones detectadas: "
+                 << combinacionesDetectadas << endl;
+
+            cout << "Cascadas de esta eliminacion: "
+                 << cascadasActuales << endl;
+
+            cout << "Puntuacion: "
+                 << puntuacion << endl;
+
         }else if(opcion == 3){
             int fila = filaSeleccion(filas);
 
             eliminarFila(tablero,filas,columnas,fila);
 
+            redimensionarEliminadas(eliminadas, filas, columnas);
+
+            procesarCascadas(tablero,
+                             eliminadas,
+                             filas,
+                             columnas,
+                             fichasEliminadas,
+                             combinacionesDetectadas,
+                             cascadasActuales,
+                             puntuacion);
+
+            cout << "Eliminaciones realizadas: "
+                 << eliminacionesUsuario << endl;
+
+            cout << "Fichas eliminadas en total: "
+                 << fichasEliminadas << endl;
+
+            cout << "Combinaciones detectadas: "
+                 << combinacionesDetectadas << endl;
+
+            cout << "Cascadas de esta eliminacion: "
+                 << cascadasActuales << endl;
+
+            cout << "Puntuacion: "
+                 << puntuacion << endl;
+
         }else if(opcion == 4){
             int columna = columnaSeleccion(columnas);
 
             agregarColumna(tablero,filas,columnas,columna);
+
+            redimensionarEliminadas(eliminadas, filas, columnas);
+
+            procesarCascadas(tablero,
+                             eliminadas,
+                             filas,
+                             columnas,
+                             fichasEliminadas,
+                             combinacionesDetectadas,
+                             cascadasActuales,
+                             puntuacion);
+
+            cout << "Eliminaciones realizadas: "
+                 << eliminacionesUsuario << endl;
+
+            cout << "Fichas eliminadas en total: "
+                 << fichasEliminadas << endl;
+
+            cout << "Combinaciones detectadas: "
+                 << combinacionesDetectadas << endl;
+
+            cout << "Cascadas de esta eliminacion: "
+                 << cascadasActuales << endl;
+
+            cout << "Puntuacion: "
+                 << puntuacion << endl;
         }else if(opcion == 5){
             int columna = columnaSeleccion(columnas);
 
             eliminarColumna(tablero,filas,columnas,columna);
-        }else if(opcion == 6)break;
+
+            redimensionarEliminadas(eliminadas, filas, columnas);
+
+            procesarCascadas(tablero,
+                             eliminadas,
+                             filas,
+                             columnas,
+                             fichasEliminadas,
+                             combinacionesDetectadas,
+                             cascadasActuales,
+                             puntuacion);
+
+            cout << "Eliminaciones realizadas: "
+                 << eliminacionesUsuario << endl;
+
+            cout << "Fichas eliminadas en total: "
+                 << fichasEliminadas << endl;
+
+            cout << "Combinaciones detectadas: "
+                 << combinacionesDetectadas << endl;
+
+            cout << "Cascadas de esta eliminacion: "
+                 << cascadasActuales << endl;
+
+            cout << "Puntuacion: "
+                 << puntuacion << endl;
+        }else if(opcion == 6){
+            std::cout << "Bytes del tablero: " << bytesTablero << std::endl;
+            imprimirBits(tablero,bytesTablero);
+            std::cout << std::endl;
+        }else if(opcion == 7)break;
 
         mostrarTablero(tablero,filas,columnas);
         opcion = pedirAccion();
@@ -65,26 +193,9 @@ int main(){
 
     }
 
-    std::cout << std::endl;
-
-    std::cout << "Bytes del tablero: " << bytesTablero << std::endl;
-
-    // imprimirBits(tablero,bytesTablero);
-
-    std::cout << std::endl;
-
-    // for(int i = 0; i <= bytesTablero; i++){
-    //     unsigned char ficha = obtenerFicha(tablero, i);
-    //     cout << "Ficha: " << i << " = " << (int)ficha << " (";
-    //     for(int j = 2; j >= 0; j--){
-    //         cout << ((ficha >> j) & 1);
-    //     }
-
-    //     cout << ")" << endl;
-    // }
     delete[] tablero;
-    tablero = nullptr;
     delete[]eliminadas;
+    tablero = nullptr;
     eliminadas = nullptr;
 
     return 0;

@@ -14,5 +14,10 @@ void agregarFila(unsigned char*& tablero,int& filas,int columnas,int fila);
 void agregarColumna(unsigned char*& tablero,int filas,int& columnas,int columna);
 void eliminarFila(unsigned char*& tablero,int& filas,int columnas,int fila);
 void eliminarColumna(unsigned char*& tablero,int filas,int& columnas,int columna);
+void procesarCascadas(unsigned char* tablero,int* eliminadas,int filas,int columnas,int& fichasEliminadas,
+                      int& combinacionesDetectadas,
+                      int& cascadasActuales,
+                      int& puntuacion);
+void redimensionarEliminadas(int*& eliminadas, int filas, int columnas);
 
 #endif // MEMORIATABLERO_H
